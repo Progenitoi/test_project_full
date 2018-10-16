@@ -3,19 +3,10 @@ import hashlib
 
 class CodeStore(object):
     def __init__(self, *args):
-        self.args = args
-        self.storage = []
-    def hashes(self):
-        strings = self.args
-        strings = strings.encode('utf-8')
-        hashes = hashlib.md5(strings)
-        self.storage.append(hashes)
-    def check(self):
-        strings = self.args
-        strings = strings.encode('utf-8')
-        hashes = hashlib.md5(strings)
-        for i in self.storage:
-            if hashes == i:
-                return 'Match found'
-            else:
-                return 'Match not found'
+        self.storage = [hashlib.md5(string.encode('utf-8')) for string in args]
+
+    def check(self, lookup):
+        for md5_obj in self.storage:
+            if md5_obj.hexdigest() == hashlib.md5(lookup.encode('utf-8')).hexdigest():
+                return md5_obj
+            
